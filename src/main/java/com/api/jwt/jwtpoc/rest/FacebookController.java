@@ -46,6 +46,8 @@ public class FacebookController {
     private String BASE_URL;
     @Value("${redirect.uri}")
     private String REDIRECT_URL;
+    @Value("${facebook.redirect.uri}")
+    private String FACEBOOK_REDIRECT_URI;
 
     private final BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
     private final RestTemplate restTemplate;
@@ -82,7 +84,7 @@ public class FacebookController {
         String uri = UriComponentsBuilder
                 .fromHttpUrl("https://graph.facebook.com/v3.1/oauth/access_token")
                 .queryParam("client_id", APP_ID)
-                .queryParam("redirect_uri", "http://localhost:8080/facebook")
+                .queryParam("redirect_uri", FACEBOOK_REDIRECT_URI)
                 .queryParam("client_secret", APP_SECRET)
                 .queryParam("code", code).toUriString();
         HttpHeaders headers = new HttpHeaders();
