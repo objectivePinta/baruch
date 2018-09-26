@@ -72,7 +72,7 @@ public class FacebookController {
                 .fromHttpUrl(BASE_URL)
                 .pathSegment("v3.1", "dialog", "oauth")
                 .queryParam("client_id", APP_ID)
-                .queryParam("redirect_uri", "http://localhost:8080/facebook")
+                .queryParam("redirect_uri", FACEBOOK_REDIRECT_URI)
                 .queryParam("state", encodedState);
         return new RedirectView(builder.build().toUriString());
     }
