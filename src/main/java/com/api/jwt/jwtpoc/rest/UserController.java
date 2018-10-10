@@ -4,10 +4,13 @@ import com.api.jwt.jwtpoc.model.ApplicationUser;
 import com.api.jwt.jwtpoc.repository.UserRepository;
 import com.google.common.collect.Lists;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -79,6 +82,21 @@ public class UserController {
                 .collect(Collectors.toList());
         deletedUsers.forEach(userRepository::delete);
         return deletedUsers;
+    }
+
+    @GetMapping("self")
+    @PreAuthorize("isAuthenticated()")
+    public ApplicationUser getDetailsAboutLoggedInUser() {
+        return userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+    }
+
+    @PostMapping("self/full-name")
+    @PreAuthorize("isAuthenticated()")
+    public ApplicationUser updateFullname(@RequestBody String fullname) {
+        ApplicationUser user =  userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        user.setFullName(fullname);
+        userRepository.save(user);
+        return user;
     }
 
 }
